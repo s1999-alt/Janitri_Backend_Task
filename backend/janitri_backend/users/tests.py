@@ -21,7 +21,6 @@ class UserTests(APITestCase):
     self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.admin_token}')
 
   def test_admin_can_create_doctor(self):
-    """Admin should be able to create a doctor user"""
     data = {
         "username": "drsmith",
         "email": "drsmith@example.com",
@@ -36,7 +35,6 @@ class UserTests(APITestCase):
     self.assertEqual(response.data['role'], "doctor")
 
   def test_non_admin_cannot_create_user(self):
-    """Doctors/Nurses should NOT be able to create users"""
     # Create a doctor manually
     doctor = User.objects.create_user(username="doc", password="docpass", role="doctor")
     response = self.client.post(reverse('token_obtain_pair'),

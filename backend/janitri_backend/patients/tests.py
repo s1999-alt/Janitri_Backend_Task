@@ -15,7 +15,6 @@ class PatientTests(APITestCase):
       self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.doctor_token}')
 
   def test_doctor_can_create_patient(self):
-      """Doctors can add patients"""
       data = {
           "name": "Alice",
           "age": 30,
@@ -28,7 +27,6 @@ class PatientTests(APITestCase):
       self.assertEqual(response.data['created_by'], self.doctor.id)
 
   def test_nurse_cannot_create_patient(self):
-      """Nurses should not be allowed to add patients"""
       # Create nurse
       nurse = User.objects.create_user(username="nina", password="nursepass", role="nurse")
       response = self.client.post(reverse('token_obtain_pair'),
@@ -41,7 +39,6 @@ class PatientTests(APITestCase):
       self.assertEqual(response.status_code, 403)
 
   def test_list_patients(self):
-      """All authenticated roles can view patient list"""
       Patient.objects.create(name="Test Patient", medical_id="PAT003", created_by=self.doctor)
       response = self.client.get("/api/patients/")
       self.assertEqual(response.status_code, 200)

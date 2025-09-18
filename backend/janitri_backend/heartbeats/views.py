@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filter import HeartRateFilter
 from users.permissions import IsAdminOrDoctor
 
-
+# view for heartrate creation
 class HeartRateCreateView(generics.CreateAPIView):
   serializer_class = HeartRateSerializer
 
@@ -17,7 +17,7 @@ class HeartRateCreateView(generics.CreateAPIView):
   def perform_create(self, serializer):
     serializer.save(recorded_by=self.request.user)
 
-
+#view for heartrate listing
 class HeartRateListView(generics.ListAPIView):
     serializer_class = HeartRateSerializer
     permission_classes = [IsAuthenticated]

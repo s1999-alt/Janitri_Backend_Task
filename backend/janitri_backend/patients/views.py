@@ -7,7 +7,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-
+#view for patient creation
 class PatientListCreateView(generics.ListCreateAPIView):
   queryset = Patient.objects.all().order_by('-created_at')
   serializer_class = PatientSerializer
@@ -24,7 +24,7 @@ class PatientListCreateView(generics.ListCreateAPIView):
   def perform_create(self, serializer):
     serializer.save(created_by=self.request.user)
 
-
+#view for get the patient
 class PatientRetrieveView(generics.RetrieveAPIView):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
