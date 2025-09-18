@@ -4,10 +4,23 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-class RegisterView(generics.CreateAPIView):
+#uncomment this and comment UserListView, UserCreateView for anyone can register
+# class RegisterView(generics.CreateAPIView):
+#   queryset = User.objects.all()
+#   serializer_class = RegisterSerializer
+#   permission_classes = [permissions.AllowAny]
+
+
+
+class UserListView(generics.ListAPIView):
+  queryset = User.objects.all()
+  serializer_class = UserSerializer
+  permission_classes = [permissions.IsAdminUser] # only admins can view all users
+
+class UserCreateView(generics.CreateAPIView):
   queryset = User.objects.all()
   serializer_class = RegisterSerializer
-  permission_classes = [permissions.AllowAny]
+  permission_classes = [permissions.IsAdminUser] # only admins can create doctors/nurses
 
 
 
