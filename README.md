@@ -55,8 +55,6 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ``` 
 
-```bash
-```   
 ### 4. Apply migrations
 ```bash
 python manage.py makemigrations
