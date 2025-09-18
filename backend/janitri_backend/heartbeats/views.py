@@ -4,11 +4,15 @@ from .serializers import HeartRateSerializer
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from .filter import HeartRateFilter
+from users.permissions import IsAdminOrDoctor
 
 
 class HeartRateCreateView(generics.CreateAPIView):
   serializer_class = HeartRateSerializer
-  permission_classes = [IsAuthenticated]
+
+  def get_permissions(self):
+     # Only Admin or Doctor can record heart rates
+     return [IsAdminOrDoctor()]
 
   def perform_create(self, serializer):
     serializer.save(recorded_by=self.request.user)
