@@ -9,7 +9,7 @@ class HeartRate(models.Model):
   bpm = models.PositiveSmallIntegerField(validators=[MinValueValidator(20), MaxValueValidator(240)])
   recorded_at = models.DateTimeField()
   recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-  created_at = models.DateTimeField(auto_now_add=False)
+  created_at = models.DateTimeField(auto_now_add=True)
 
   class Meta:
     ordering = ['-recorded_at']
