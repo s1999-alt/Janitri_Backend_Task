@@ -180,3 +180,29 @@ janitri_backend/
 ├── heartbeats/    # heart rate management
 ├── janitri_backend/ # settings, urls, wsgi
 └── manage.py
+
+### 📌 Assumptions & Decisions
+
+Patients are not users (they don’t log in). They are managed by doctors/admins.
+
+Only Admins can create Doctors/Nurses → ensures security.
+
+Doctors/Admins can add patients and record heart rates.
+
+Nurses are restricted to read-only access.
+
+recorded_at = actual measurement time (provided by client/device).
+
+created_at = system timestamp (auto set by Django).
+
+Used SQLite for development (easy setup), but recommend PostgreSQL for production.
+
+### ✅ Future Improvements
+
+Add Device model to link IoT devices to patients.
+
+Use Celery + Redis for async data ingestion.
+
+Add real-time updates with WebSockets.
+
+Implement audit logs for compliance (who changed what, when).
