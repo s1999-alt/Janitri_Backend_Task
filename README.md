@@ -19,6 +19,9 @@ It implements **JWT authentication**, **role-based access control**, **paginatio
   - Nurse → view-only (patients & heart rates)
 - **Patients**: CRUD APIs (restricted create permissions)
 - **Heart Rate Records**: record & retrieve with filtering (by patient, date range)
+- **Heart Rate Enhancements (extra work)**:
+  - **Abnormal flag** → every heart rate record includes an `"abnormal": true/false` field if outside safe range (60–100 BPM).
+  - **Summary API** → doctors can view quick insights (min/max/avg/latest BPM, total records).
 - **Pagination & filtering** for large datasets
 - **Unit tests** for all major functionality
 - **Clean, professional structure** (apps: `users`, `patients`, `heartbeats`)
@@ -107,23 +110,28 @@ Authorization: Bearer <access_token>
 
 
 ## 📡 API Documentation
+
 ### Users
-#### Endpoint	Method	Role	Description
-/api/users/login/	POST	All	Login & get JWT tokens
-/api/users/token/refresh/	POST	All	Refresh JWT
-/api/users/create/	POST	Admin	Create doctor/nurse
-/api/users/	GET	Admin	List all users
+| Endpoint | Method | Role | Description |
+|----------|--------|------|-------------|
+| `/api/users/login/` | POST | All | Login & get JWT tokens |
+| `/api/users/token/refresh/` | POST | All | Refresh JWT |
+| `/api/users/create/` | POST | Admin | Create doctor/nurse |
+| `/api/users/` | GET | Admin | List all users |
 
 ### Patients
-#### Endpoint	Method	Role	Description
-/api/patients/	GET	All roles	List patients (pagination, filtering, search)
-/api/patients/	POST	Admin/Doctor	Create new patient
-/api/patients/{id}/	GET	All roles	Get patient details
+| Endpoint | Method | Role | Description |
+|----------|--------|------|-------------|
+| `/api/patients/` | GET | All roles | List patients (pagination, filtering, search) |
+| `/api/patients/` | POST | Admin/Doctor | Create new patient |
+| `/api/patients/{id}/` | GET | All roles | Get patient details |
 
 ### Heartbeats
-#### Endpoint	Method	Role	Description
-/api/heartbeats/	POST	Admin/Doctor	Record heart rate for a patient
-/api/heartbeats/list/	GET	All roles	List heart rates (filter by patient, date range)
+| Endpoint | Method | Role | Description |
+|----------|--------|------|-------------|
+| `/api/heartbeats/` | POST | Admin/Doctor | Record heart rate for a patient |
+| `/api/heartbeats/list/` | GET | All roles | List heart rates (filter by patient, date range) |
+| `/api/heartbeats/summary/` | GET | All roles | Get summary (min, max, avg, latest BPM, total count) |
 
 ### Example Heart Rate Record
 {
@@ -171,6 +179,8 @@ Users: Admin can create doctors/nurses, non-admins cannot
 Patients: Doctors can create patients, nurses cannot, all can view
 
 Heartbeats: Doctors can record, nurses cannot, all can view
+ - Heartbeat Summary: Validates min/max/avg/latest BPM are computed correctly
+ - Abnormal flag: Ensures correct classification of heart rates as abnormal or normal
 
 ### 📂 Project Structure
 
@@ -192,6 +202,10 @@ Doctors/Admins can add patients and record heart rates.
 Nurses are restricted to read-only access.
 
 recorded_at = actual measurement time (provided by client/device).
+
+every heart rate record includes an `"abnormal": true/false` field if outside safe range (60–100 BPM).
+
+doctors can view quick insights (min/max/avg/latest BPM, total records).
 
 created_at = system timestamp (auto set by Django).
 

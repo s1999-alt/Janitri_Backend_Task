@@ -41,3 +41,22 @@ class HeartRateTests(APITestCase):
       response = self.client.get("/api/heartbeats/list/?patient=" + str(self.patient.id))
       self.assertEqual(response.status_code, 200)
       self.assertGreaterEqual(len(response.data['results']), 1)
+  
+  def test_abnormal_flag_behavior(self):
+      r = self.client.post('/api/heartbeats/', {'patient': self.patient.id, 'bpm':59, 'recorded_at':'2025-09-18 10:00:00'}, format='json')
+      assert r.status_code == 201
+      assert r.data['abnormal'] is True
+
+      r2 = self.client.post('/api/heartbeats/', {'patient': self.patient.id, 'bpm':80, 'recorded_at':'2025-09-18 11:00:00'}, format='json')
+      assert r2.status_code == 201
+      assert r2.data['abnormal'] is False
+
+  def test_summary_computation(self):
+      HeartRate.objects.create(patient=self.patient, bpm=70, recorded_at='2025-09-18 09:00:00', recorded_by=self.doctor)
+      HeartRate.objects.create(patient=self.patient, bpm=90, recorded_at='2025-09-18 10:00:00', recorded_by=self.doctor)
+      resp = self.client.get(f'/api/heartbeats/summary/?patient={self.patient.id}')
+      data = resp.json()
+      assert data['min_bpm'] == 70
+      assert data['max_bpm'] == 90
+      assert abs(data['avg_bpm'] - 80.0) < 0.0001
+      assert data['latest_bpm'] == 90
